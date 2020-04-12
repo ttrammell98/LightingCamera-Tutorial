@@ -11,6 +11,8 @@ namespace LightingAndCamerasStarter
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        // our crate
+        Crate crate;
 
         public Game1()
         {
@@ -26,7 +28,9 @@ namespace LightingAndCamerasStarter
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // initialize the crate 
+            crate = new Crate(this, CrateType.Slats);
+
 
             base.Initialize();
         }
@@ -75,7 +79,7 @@ namespace LightingAndCamerasStarter
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            crate.Draw();
 
             base.Draw(gameTime);
         }
