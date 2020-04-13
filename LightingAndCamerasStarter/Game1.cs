@@ -11,8 +11,11 @@ namespace LightingAndCamerasStarter
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        // our crate
-        Crate crate;
+        // A collection of crates
+        Crate[] crates;
+        // The game camera
+        FPSCamera camera;
+
 
         public Game1()
         {
@@ -28,10 +31,8 @@ namespace LightingAndCamerasStarter
         /// </summary>
         protected override void Initialize()
         {
-            // initialize the crate 
-            crate = new Crate(this, CrateType.Slats);
-
-
+            // Initialize the camera 
+            camera = new FPSCamera(this, new Vector3(0, 3, 10));
             base.Initialize();
         }
 
@@ -44,7 +45,15 @@ namespace LightingAndCamerasStarter
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // Make some crates
+            crates = new Crate[] {
+                new Crate(this, CrateType.DarkCross, Matrix.Identity),
+                new Crate(this, CrateType.Slats, Matrix.CreateTranslation(4, 0, 5)),
+                new Crate(this, CrateType.Cross, Matrix.CreateTranslation(-8, 0, 3)),
+                new Crate(this, CrateType.DarkCross, Matrix.CreateRotationY(MathHelper.PiOver4) * Matrix.CreateTranslation(1, 0, 7)),
+                new Crate(this, CrateType.Slats, Matrix.CreateTranslation(3, 0, -3)),
+                new Crate(this, CrateType.Cross, Matrix.CreateRotationY(3) * Matrix.CreateTranslation(3, 2, -3))
+            };
         }
 
         /// <summary>
@@ -66,7 +75,8 @@ namespace LightingAndCamerasStarter
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            // Update the camera
+            camera.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -79,7 +89,11 @@ namespace LightingAndCamerasStarter
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            crate.Draw();
+            // Draw some crates
+            foreach (Crate crate in crates)
+            {
+                crate.Draw(camera);
+            }
 
             base.Draw(gameTime);
         }

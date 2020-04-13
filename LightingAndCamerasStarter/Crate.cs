@@ -145,8 +145,13 @@ namespace LightingAndCamerasStarter
         /// <summary>
         /// Draws the crate
         /// </summary>
-        public void Draw()
+        /// <param name="camera">The camera to use to draw the crate</param>
+        public void Draw(ICamera camera)
         {
+            // set the view and projection matrices
+            effect.View = camera.View;
+            effect.Projection = camera.Projection;
+
             // apply the effect 
             effect.CurrentTechnique.Passes[0].Apply();
 
@@ -161,6 +166,7 @@ namespace LightingAndCamerasStarter
                 0,                          // The first index to use
                 12                          // the number of triangles to draw
             );
+
         }
 
         /// <summary>
@@ -168,13 +174,15 @@ namespace LightingAndCamerasStarter
         /// </summary>
         /// <param name="game">The game this crate belongs to</param>
         /// <param name="type">The type of crate to use</param>
-        public Crate(Game game, CrateType type)
+        /// <param name="world">The position and orientation of the crate in the world</param>
+        public Crate(Game game, CrateType type, Matrix world)
         {
             this.game = game;
             this.texture = game.Content.Load<Texture2D>($"crate{(int)type}_diffuse");
             InitializeVertices();
             InitializeIndices();
             InitializeEffect();
+            effect.World = world;
         }
     }
 }
